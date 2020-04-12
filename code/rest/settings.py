@@ -1,13 +1,12 @@
 import os
+from os import environ as env
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'bew9%agaop4^%62ff_v&90ahm2tp8&f%=kap&%q*$#0but2ef5' 
+SECRET_KEY = env.get("SECRET_KEY")
 
-ALLOWED_HOSTS = ['localhost']
-
-
-# Application definition
+ALLOWED_HOSTS = ["localhost"]
+DEBUG = bool(env.get("DEBUG"))
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -28,8 +27,12 @@ WSGI_APPLICATION = 'rest.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': env.get("POSTGRES_PASSWORD"),
+        'HOST': env.get("POSTGRES_HOST"),
+        'PORT': '5432',
     }
 }
 

@@ -1,5 +1,6 @@
 from django.db import models
-import uuid, datetime
+from django.utils import timezone
+import uuid
 
 
 class Message(models.Model):
@@ -17,4 +18,4 @@ class Message(models.Model):
     reciever_id = models.UUIDField(null=False)
     reciever_name = models.TextField(max_length=100, default="")
     text = models.TextField(max_length=1024, editable=True, null=False)
-    date = models.DateTimeField(default=datetime.date)
+    date = models.DateTimeField(default=timezone.now)

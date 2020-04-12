@@ -16,7 +16,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-]
+]# Create your tests here.
+
 
 ROOT_URLCONF = 'rest.urls'
 
@@ -27,12 +28,12 @@ WSGI_APPLICATION = 'rest.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
+        'ENGINE'  : 'django.db.backends.postgresql',
+        'NAME'    : 'postgres',
+        'USER'    : 'postgres',
         'PASSWORD': env.get("POSTGRES_PASSWORD"),
-        'HOST': env.get("POSTGRES_HOST"),
-        'PORT': '5432',
+        'HOST'    : env.get("POSTGRES_HOST"),
+        'PORT'    : '5432',
     }
 }
 

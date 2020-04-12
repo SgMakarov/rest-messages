@@ -3,7 +3,7 @@ REST API for send, recieve, update and delete messages
 
 ## Introduction
 
-This API is based on default django application, created by `django-admin`.  It uses just one model, which contain information about sender, reciever and message itself. Format of input data is JSON.
+This API is based on default django application, created by `django-admin`.  It uses just one model, which contain information about sender, receiver and message itself. Format of input data is JSON.
 PATCH
 
 ## To run
@@ -18,21 +18,21 @@ class Message(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sender_id = models.UUIDField(null=False)
     sender_name = models.TextField(max_length=100, default="")
-    reciever_id = models.UUIDField(null=False)
-    reciever_name = models.TextField(max_length=100, default="")
+    receiver_id = models.UUIDField(null=False)
+    receiver_name = models.TextField(max_length=100, default="")
     text = models.TextField(max_length=1024, editable=True, null=False)
     date = models.DateTimeField(default=timezone.now)
 
 ```
 
-Here, `id` is used as primary key, so it should be provided for update and delete message. `sender_id` should be provided for this operations as well. When reading, you need to provide either `sender_id` (in this case all fields are provided), or `reciever_id` (in this case `sender_id` is hidden, but name is still avalible). This is done for security: If reciever can get sender's UUID it can then modify or delete message, but by design it is prohibited. If any extra parameters provided, they are ignored. If required parameters are missed or some parameters are not valid, you will get `Http400` error. If they are valid, but nothing is found, `Http404` error is returned. Post method returns 201 code on success, all other  - 200. 
+Here, `id` is used as primary key, so it should be provided for update and delete message. `sender_id` should be provided for this operations as well. When reading, you need to provide either `sender_id` (in this case all fields are provided), or `receiver_id` (in this case `sender_id` is hidden, but name is still avalible). This is done for security: If receiver can get sender's UUID it can then modify or delete message, but by design it is prohibited. If any extra parameters provided, they are ignored. If required parameters are missed or some parameters are not valid, you will get `Http400` error. If they are valid, but nothing is found, `Http404` error is returned. Post method returns 201 code on success, all other  - 200. 
 
 Here are HTTP methods table (**bold** parameters are required):
 
 |Operation|Method|Parameters|
 |-|-|-|
-|Read|GET|id, **sender_id** or **reciever_id** (at least one should be provided)|
-|Create|POST|**sender_id**, **reciever_id**, **text**,sender_name, reciever_name, date|
+|Read|GET|id, **sender_id** or **receiver_id** (at least one should be provided)|
+|Create|POST|**sender_id**, **receiver_id**, **text**,sender_name, receiver_name, date|
 |Update|PATCH|**id**, **sender_id**, **text**|
 |Delete|DELETE|**id**, **sender_id**|
 
@@ -42,7 +42,7 @@ Some HTTP utility should be used, for example cURL or httpie. Here I will use cU
 ### Create
 For example, observe this request:
 ```bash
-    curl -X POST -d '{"sender_id": "7dc922c8-7cc9-11ea-bb59-ffbc3f2ce715", "reciever_id": "7cc86cda-7cc9-11ea-8133-cfb4280c5b94", "text":"test message"}' http://localhost/api/message/    
+    curl -X POST -d '{"sender_id": "7dc922c8-7cc9-11ea-bb59-ffbc3f2ce715", "receiver_id": "7cc86cda-7cc9-11ea-8133-cfb4280c5b94", "text":"test message"}' http://localhost/api/message/    
 ```
 It will create message with the following content:
 ```json
@@ -50,8 +50,8 @@ It will create message with the following content:
     "id": "3cc50e3e-2f61-4258-a43f-a941f9db643a", 
     "sender_id": "7dc922c8-7cc9-11ea-bb59-ffbc3f2ce715", 
     "sender_name": "sender", 
-    "reciever_id": "7cc86cda-7cc9-11ea-8133-cfb4280c5b94",
-    "reciever_name": "reciever",
+    "receiver_id": "7cc86cda-7cc9-11ea-8133-cfb4280c5b94",
+    "receiver_name": "receiver",
     "text": "test message", 
     "date": "2020-04-12T09:37:25.492509"
 }
@@ -70,17 +70,17 @@ This query will return us list of messages sent by the user in the following for
     "id": "3cc50e3e-2f61-4258-a43f-a941f9db643a",
     "sender_id": "7dc922c8-7cc9-11ea-bb59-ffbc3f2ce715",
     "sender_name": "sender",
-    "reciever_id": "7cc86cda-7cc9-11ea-8133-cfb4280c5b94", 
-    "reciever_name": "reciever",
+    "receiver_id": "7cc86cda-7cc9-11ea-8133-cfb4280c5b94", 
+    "receiver_name": "receiver",
     "text": "test message",
     "date": "2020-04-12T09:37:25.492509"
 }]
 ```
 
-However, if we get recieved messages with the following query, no sender_id is provided:
+However, if we get received messages with the following query, no sender_id is provided:
 
 ```bash
- curl -X GET -d '{"reciever_id": "7cc86cda-7cc9-11ea-8133-cfb4280c5b94"}' http://localhost/api/message/
+ curl -X GET -d '{"receiver_id": "7cc86cda-7cc9-11ea-8133-cfb4280c5b94"}' http://localhost/api/message/
 ```
 
 Output:
@@ -88,8 +88,8 @@ Output:
 [{
 "id": "3cc50e3e-2f61-4258-a43f-a941f9db643a", 
 "sender_name": "sender",
-"reciever_id": "7cc86cda-7cc9-11ea-8133-cfb4280c5b94", 
-"reciever_name": "reciever", 
+"receiver_id": "7cc86cda-7cc9-11ea-8133-cfb4280c5b94", 
+"receiver_name": "receiver", 
 "text": "test message",
 "date": "2020-04-12T09:50:50.357664"}]
 ```
@@ -109,8 +109,8 @@ This will return updated message:
     "id": "3cc50e3e-2f61-4258-a43f-a941f9db643a", 
     "sender_id": "7dc922c8-7cc9-11ea-bb59-ffbc3f2ce715", 
     "sender_name": "sender", 
-    "reciever_id": "7cc86cda-7cc9-11ea-8133-cfb4280c5b94",
-    "reciever_name": "reciever",
+    "receiver_id": "7cc86cda-7cc9-11ea-8133-cfb4280c5b94",
+    "receiver_name": "receiver",
     "text": "new text", 
     "date": "2020-04-12T09:37:25.492509"
 }

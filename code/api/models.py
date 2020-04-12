@@ -14,8 +14,8 @@ class Message(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sender_id = models.UUIDField(null=False)
-    sender_name = models.TextField(max_length=100, default="")
+    sender_name = models.TextField(max_length=100, default="sender")
     reciever_id = models.UUIDField(null=False)
-    reciever_name = models.TextField(max_length=100, default="")
+    reciever_name = models.TextField(max_length=100, default="reciever")
     text = models.TextField(max_length=1024, editable=True, null=False)
     date = models.DateTimeField(default=timezone.now)

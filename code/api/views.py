@@ -85,15 +85,15 @@ class MessageView(APIView):
                 message, data={"text": new_text}, partial=True)
             initial = SentMessageSerializer(message)
         except Message.DoesNotExist:
-            return HttpResponse(status=404)
+            return HttpResponse("404",status=404)
 
         if not initial.data.get("sender_id") == sender_id:
-            return HttpResponse(status=404)
+            return HttpResponse("404", status=404)
         if not serializer.is_valid():
             return HttpResponse("Bad request", status=400)
         serializer.save()
-
-        return JsonResponse(serializer.data, status=200)
+        updated_message = Message.objects.get(pk=message_id)
+        return JsonResponse(SentMessageSerializer(updated_message).data, status=200)
 
     def delete(self, request):
         """
@@ -114,8 +114,8 @@ class MessageView(APIView):
             message = Message.objects.get(pk=message_id)
             serializer = SentMessageSerializer(message)
         except Message.DoesNotExist:
-            return HttpResponse(status=404)
+            return HttpResponse("404", status=404)
         if not serializer.data.get("sender_id") == sender_id:
-            return HttpResponse(status=404)
+            return HttpResponse("404", status=404)
         message.delete()
         return JsonResponse(serializer.data, status=200)

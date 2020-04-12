@@ -11,7 +11,7 @@ class SentMessageSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Message
-        fields = ['id', 'sender_id', 'reciever_id', 'text', 'date']
+        fields = ['id', 'sender_id', 'sender_name','reciever_id','reciever_name', 'text', 'date']
 
 class RecievedMessageSerializer(serializers.ModelSerializer):
     """
@@ -22,4 +22,4 @@ class RecievedMessageSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Message
-        fields = ['message_id', 'sender_name', 'reciever_id', 'reciever_name','text', 'date']
+        fields = ['id', 'sender_name', 'reciever_id', 'reciever_name','text', 'date']

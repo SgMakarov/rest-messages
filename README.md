@@ -1,4 +1,4 @@
-REST API for send, recieve, update and delete messages
+REST API for send, receive, update and delete messages
 ===
 
 ## Introduction

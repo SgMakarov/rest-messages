@@ -1,8 +1,5 @@
 REST API for send, recieve, update and delete messages
 ===
-## Table of Contents
-
-[TOC]
 
 ## Introduction
 

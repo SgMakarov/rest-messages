@@ -4,7 +4,7 @@ REST API for send, receive, update and delete messages
 ## Introduction
 
 This API is based on default django application, created by `django-admin`.  It uses just one model, which contain information about sender, receiver and message itself. Format of input data is JSON.
-PATCH
+
 
 ## To run
 First, you need to create and run containers with `docker-compose up`. Then, migrations should be performed with `docker exec -it django bash migrate.sh`. I decided to move migrations to a separate command, because AFAIK there can be some drawbacks of migration on server startup, especially if application is sharded on several containers. 

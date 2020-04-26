@@ -12,6 +12,13 @@ from api.models.message import Message
 from api.serializers.userSerializers import UserSerializer
 from api.serializers.messageSerializers import MessageSerializer
 
+"""
+Here is a huge block of swagger decorators that describe each method in 
+UserViewSet. 
+
+
+"""
+
 
 @method_decorator(name="create", decorator=swagger_auto_schema(
     operation_summary="Create new User",
@@ -137,12 +144,18 @@ class UserViewSet(
     viewsets.ModelViewSet,
 ):
     """
-    Just use default request handlers, as we need user model only for tests. 
+    In addition to default request handlers, such as create, retrieve, and so on
+    for user, I've decided to place all actions with messages here, as they are
+    actions done by user. 
 
     """
     serializer_class = UserSerializer
     queryset = User.objects.all()
+    """
+    Creation of message. Sender UUID will be specified in URL, and reciever UUID
+    with text will be in request body. 
 
+    """
     @action(detail=True, methods=['post'])
     def write_message(self, request, pk=None):
         data = JSONParser().parse(request)
@@ -153,18 +166,27 @@ class UserViewSet(
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
+
+    """UUID will again be in URL, so here no request body needed."""
     @action(detail=True, methods=['get'])
     def receive_messages(self, request, pk=None):
         messages = Message.objects.filter(receiver_id=pk)
         serializer = MessageSerializer(messages, many=True)
         return JsonResponse(serializer.data, status=201, safe=False)
 
+    """UUID will again be in URL, so here no request body needed."""
     @action(detail=True, methods=['get'])
     def read_sent_messages(self, request, pk=None):
         messages = Message.objects.filter(sender_id=pk)
         serializer = MessageSerializer(messages, many=True)
         return JsonResponse(serializer.data, status=201, safe=False)
 
+    """
+    When update, message UUID and new text should be passed in request body
+    sender_id is in URL, and it is checked to be sender of actual message 
+    we update.
+    
+    """
     @action(detail=True, methods=['patch'])
     def update_message(self, request, pk=None):
         data = JSONParser().parse(request)
@@ -202,13 +224,18 @@ class UserViewSet(
             MessageSerializer(updated_message).data,
             status=200
         )
+
+    """
+    Method to delete message. Here, we need only it's ID. sender_id is in URL,
+    and it is checked to be sender of actual message we delete. 
+
+    """
     @action(detail=True, methods=['delete'])
     def delete_message(self, request, pk=None):
         data = JSONParser().parse(request)
         message_id = data.get("id")
         if not message_id:
             return HttpResponse(content="Bad request", status=400)
-        
 
         try:
             message = Message.objects.get(pk=message_id)

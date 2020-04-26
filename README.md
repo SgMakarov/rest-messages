@@ -14,7 +14,7 @@ First, you need to create and run containers with `docker-compose up`. Then, mig
 
 ## API details
 
-All details, such as: responce codes, parameters, sample queries and even test enviromnemt is avalible at http://localhost/api/swagger/. Be aware, that due to some django properties you will need to serve statics by yourself (with simple command to `manage.py`, but still), and statics are needed for `swagger.ui`. 
+All details, such as: responce codes, parameters, sample queries and even test enviromnemt is avalible at http://localhost/api/swagger/. Be aware, that due to some django properties you will need to serve staticsby yourself, if DEBUG is set to false, (with simple command to `manage.py`, but still), and statics are needed for `swagger.ui`. 
 
 
 Here are API methods: ![Image](https://i.imgur.com/qG0iOuA.png) 

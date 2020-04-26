@@ -17,7 +17,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - DEBUG=False
+      - DEBUG=True
       - SECRET_KEY='bew9%agaop4^%62ff_v&90ahm2tp8&f%=kap&%q*$$#0but2ef5'
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_HOST=postgres

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from api.models.user import User
 import uuid
 
 
@@ -17,19 +18,24 @@ class Message(models.Model):
         default=uuid.uuid4,
         editable=False,
     )
-    sender_id = models.UUIDField(null=False)
-    sender_name = models.TextField(
-        max_length=100,
-        default="sender",
+    sender_id = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        blank=False,
+        related_name="sent_messages",
     )
-    receiver_id = models.UUIDField(null=False)
-    receiver_name = models.TextField(
-        max_length=100,
-        default="receiver",
+    receiver_id = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        blank=False,
+        related_name="received_messages",
     )
     text = models.TextField(
         max_length=1024,
         editable=True,
         null=False,
     )
-    date = models.DateTimeField(default=timezone.now)
+    date = models.DateTimeField(
+        default=timezone.now,
+        editable=False,
+    )
